@@ -36,7 +36,7 @@
             if ($debugInfo.length > 0) {
                 $debugInfo.append('<div class="debuginfo-list">' + msg + '</div>');
             } else {
-                var style = 'color:#0f89f5;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
+                var style = 'color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
                 if (position == 'bottom') {
                     style += 'bottom:0';
                 } else {
