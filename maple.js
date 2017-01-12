@@ -7,6 +7,16 @@
 
 (function(window) {
     var maple = {
+
+        _getObjectType: function(obj){
+            return Object.prototype.toString.call(obj);
+        },
+        _htmlencode: function(s){  
+            var div = document.createElement('div');  
+            div.appendChild(document.createTextNode(s));  
+            return div.innerHTML;  
+        },
+
         /**
          * 输出调试信息
          * @param {string|obj} msg  调试参数，支持同时输出多个参数，逗号隔开
@@ -15,8 +25,19 @@
             // console.log(arguments)
             var consoleMsg = '';
             for(var i=0; i<arguments.length; i++){
-                if ('[object Object]' === Object.prototype.toString.call(arguments[i])) {
+                if ('[object Object]' === maple._getObjectType(arguments[i])) {
                     consoleMsg += JSON.stringify(arguments[i], null, 4) + '<br>';
+                }else if('[object Array]' === maple._getObjectType(arguments[i])){
+                    var _array = arguments[i]
+                    consoleMsg += _array.length + '<br>[<br>';
+                    for(var j = 0, length1 = _array.length; j < length1; j++){
+                        if(maple._getObjectType(_array[j]).indexOf('HTML') >0){
+                            consoleMsg += maple._htmlencode(_array[j].outerHTML);
+                        }else{
+                            consoleMsg += JSON.stringify(_array[j], null, 4);
+                        }
+                    }
+                    consoleMsg += '<br>]<br>';
                 }else{
                     consoleMsg += arguments[i] + '<br>';
                 }
