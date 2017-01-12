@@ -6,7 +6,7 @@
 ;
 
 (function(window) {
-    var maple = {
+    var mconsole = {
         /**
          * 获取对象类型
          * @param  {[type]} obj [description]
@@ -33,14 +33,14 @@
         _formateMSG: function(arg){
             var consoleMsg = '';
             for(var i=0; i<arg.length; i++){
-                if ('[object Object]' === maple._getObjectType(arg[i])) {
+                if ('[object Object]' === this._getObjectType(arg[i])) {
                     consoleMsg += JSON.stringify(arg[i], null, 4) + '<br>';
-                }else if('[object Array]' === maple._getObjectType(arg[i])){
+                }else if('[object Array]' === this._getObjectType(arg[i])){
                     var _array = arg[i]
                     consoleMsg += '<label style="color:#0000FF">Length: ' + _array.length + '</label><br>[<br>';
                     for(var j = 0, length1 = _array.length; j < length1; j++){
-                        if(maple._getObjectType(_array[j]).indexOf('HTML') >0){
-                            consoleMsg += '<label style="margin-left:30px;color:#FF6600">' + maple._htmlencode(_array[j].outerHTML) + '</label>';
+                        if(this._getObjectType(_array[j]).indexOf('HTML') >0){
+                            consoleMsg += '<label style="margin-left:30px;color:#FF6600">' + this._htmlencode(_array[j].outerHTML) + '</label>';
                         }else{
                             consoleMsg += JSON.stringify(_array[j], null, 4);
                         }
@@ -113,12 +113,12 @@
         debugInfo: function(msg) {
             // console.log(arguments)
             var consoleMsg = '';
-            consoleMsg += maple._formateMSG(arguments);
-            consoleMsg += maple._getLineNumber();
-            maple._renderDebugInfo(consoleMsg);
+            consoleMsg += this._formateMSG(arguments);
+            consoleMsg += this._getLineNumber();
+            this._renderDebugInfo(consoleMsg);
         },
     };
-    window.maple = maple;
+    window.mconsole = mconsole;
     window.onerror = function(msg, url, lineNo, columnNo, error) {
         var string = msg.toLowerCase();
         if (msg.indexOf('_mapview_') > -1) {
@@ -137,7 +137,7 @@
             ].join('<br>');
         }
         $('#debugInfo').html('');
-        maple.debugInfo(errorMessage);
+        mconsole.debugInfo(errorMessage);
         $('#debugInfo').css('color', '#c7254e');
         $('#debugInfo label.debuginfo-linenumber').hide();
     }
