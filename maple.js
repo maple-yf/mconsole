@@ -37,10 +37,10 @@
                     consoleMsg += JSON.stringify(arg[i], null, 4) + '<br>';
                 }else if('[object Array]' === maple._getObjectType(arg[i])){
                     var _array = arg[i]
-                    consoleMsg += _array.length + '<br>[<br>';
+                    consoleMsg += '<label style="color:#0000FF">Length: ' + _array.length + '</label><br>[<br>';
                     for(var j = 0, length1 = _array.length; j < length1; j++){
                         if(maple._getObjectType(_array[j]).indexOf('HTML') >0){
-                            consoleMsg += maple._htmlencode(_array[j].outerHTML);
+                            consoleMsg += '<label style="margin-left:30px;color:#FF6600">' + maple._htmlencode(_array[j].outerHTML) + '</label>';
                         }else{
                             consoleMsg += JSON.stringify(_array[j], null, 4);
                         }
@@ -65,9 +65,9 @@
                     return obj.stack;
                 };
                 lineNumber = getStackTrace().split(/\n+/)[2].replace(/(^\s+|\s+$)/, "");
-                lineNumber = lineNumber.replace(/at http\:\/\/.*\//, "").replace(/\:\d+$/, "");
+                lineNumber = lineNumber.replace(/(at )?http\:\/\/.*\//, "").replace(/\:\d+$/, "");
             } else if (stack = new Error().stack) {
-                lineNumber = stack.split(/\n+/)[1].replace(/(^\s+|\s+$)/, "").replace(/(^http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
+                lineNumber = stack.split(/\n+/)[1].replace(/(^\s+|\s+$)/, "").replace(/(http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
             }
             lineNumber = '<label style="color:#000;">----' + lineNumber + '</label>';
             return lineNumber;
@@ -81,7 +81,7 @@
             if ($debugInfo.length > 0) {
                 $debugInfo.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
             } else {
-                var style = 'bottom:0;font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
+                var style = 'bottom:0;font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.8);z-index:999;padding:10px;';
                 $('body').append('<div id="debugInfo" style="' + style + '"></div>');
                 $debugInfo = $('#debugInfo');
                 $debugInfo.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
