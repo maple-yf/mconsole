@@ -36,7 +36,7 @@
             if ($debugInfo.length > 0) {
                 $debugInfo.append('<div class="debuginfo-list">' + msg + '</div>');
             } else {
-                var style = 'color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
+                var style = 'font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
                 if (position == 'bottom') {
                     style += 'bottom:0';
                 } else {
@@ -57,19 +57,20 @@
         if (msg.indexOf('_mapview_') > -1) {
             return;
         }
+        var errorMessage = '';
         var substring = "script error";
         if (string.indexOf(substring) > -1) {
-            alert('Script Error: See Browser Console for Detail');
+            errorMessage = 'Script Error: See Browser Console for Detail';
         } else {
-            var message = [
+            errorMessage = [
                 'Message: ' + msg,
                 'URL: ' + url,
                 'Line: ' + lineNo,
                 'Error object: ' + JSON.stringify(error)
             ].join('<br>');
-            maple.debugInfo(message);
-            $('#debugInfo').css('color', '#c7254e');
-            $('#debugInfo label').hide();
         }
+        maple.debugInfo(errorMessage);
+        $('#debugInfo').css('color', '#c7254e');
+        $('#debugInfo label').hide();
     }
 })(window);
