@@ -9,16 +9,19 @@
     var maple = {
         /**
          * 输出调试信息
-         * @param {string|obj} msg 可选 调试参数，为空时捕获js错误
-         * @param {string} position 可选 调试信息的位置 top:顶部;bottom:底部
+         * @param {string|obj} msg  调试参数，支持同时输出多个参数，逗号隔开
          */
-        debugInfo: function(msg, position) {
-            // if (this.isPublic()) return;
-            if (!position) position = 'bottom';
-            if ('[object Object]' === Object.prototype.toString.call(msg)) {
-                msg = JSON.stringify(msg);
+        debugInfo: function(msg) {
+            // console.log(arguments)
+            var consoleMsg = '';
+            for(var i=0; i<arguments.length; i++){
+                if ('[object Object]' === Object.prototype.toString.call(arguments[i])) {
+                    consoleMsg += JSON.stringify(arguments[i], null, 4) + '<br>';
+                }else{
+                    consoleMsg += arguments[i] + '<br>';
+                }
             }
-            var lineNumber, test, stack;
+            var lineNumber, stack;
             if (Error.captureStackTrace) {
                 var getStackTrace = function() {
                     var obj = {};
@@ -31,20 +34,15 @@
                 lineNumber = stack.split(/\n+/)[1].replace(/(^\s+|\s+$)/, "").replace(/(^http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
             }
             lineNumber = '<label style="color:#000;">----' + lineNumber + '</label>';
-            msg = msg + lineNumber;
+            consoleMsg = consoleMsg + lineNumber;
             var $debugInfo = $('#debugInfo');
             if ($debugInfo.length > 0) {
-                $debugInfo.append('<div class="debuginfo-list">' + msg + '</div>');
+                $debugInfo.append('<div class="debuginfo-list"><pre>' + consoleMsg + '</pre></div>');
             } else {
-                var style = 'font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
-                if (position == 'bottom') {
-                    style += 'bottom:0';
-                } else {
-                    style += 'top:0';
-                }
+                var style = 'bottom:0;font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.7);z-index:999;padding:10px;';
                 $('body').append('<div id="debugInfo" style="' + style + '"></div>');
                 $debugInfo = $('#debugInfo');
-                $debugInfo.append('<div class="debuginfo-list">' + msg + '</div>');
+                $debugInfo.append('<div class="debuginfo-list"><pre>' + consoleMsg + '</pre></div>');
             }
             if ($debugInfo.height() > 150) {
                 $debugInfo.css('height', '150px')
