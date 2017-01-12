@@ -64,12 +64,12 @@
                     Error.captureStackTrace(obj, getStackTrace);
                     return obj.stack;
                 };
-                lineNumber = getStackTrace().split(/\n+/)[2].replace(/(^\s+|\s+$)/, "");
-                lineNumber = lineNumber.replace(/(at )?http\:\/\/.*\//, "").replace(/\:\d+$/, "");
+                lineNumber = getStackTrace().split(/\n+/)[3].replace(/(^\s+|\s+$)/, "");
+                lineNumber = lineNumber.replace(/(at )?http\:\/\/.*\//, "").replace(/\:\d+(\))?$/, ")");
             } else if (stack = new Error().stack) {
                 lineNumber = stack.split(/\n+/)[1].replace(/(^\s+|\s+$)/, "").replace(/(http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
             }
-            lineNumber = '<label style="color:#000;">----' + lineNumber + '</label>';
+            lineNumber = '<label class="debuginfo-linenumber" style="color:#000;">----' + lineNumber + '</label>';
             return lineNumber;
         },
         /**
@@ -78,17 +78,32 @@
          */
         _renderDebugInfo: function(msg){
             var $debugInfo = $('#debugInfo');
-            if ($debugInfo.length > 0) {
-                $debugInfo.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
+            var $debugInfoInner = $('#debugInfoInner');
+            if ($debugInfoInner.length > 0) {
+                $debugInfoInner.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
             } else {
-                var style = 'bottom:0;font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;overflow:scroll;background-color:rgba(255,255,255,0.8);z-index:999;padding:10px;';
-                $('body').append('<div id="debugInfo" style="' + style + '"></div>');
+                var style = 'height:150px;overflow:hidden;bottom:0;font-size:14px;color:#0f89f5;box-sizing:border-box;position:fixed;left:0;width:100%;background-color:rgba(255,255,255,0.9);z-index:99999;padding: 25px 0';
+                $('body').append('<div id="debugInfo" style="' + style + '"><div id="debugInfoTitle" style="box-sizing:border-box;position:absolute;top:0;width:100%;color:#FFF;background-color:#bbb;text-align:center;height:25px;line-height:22px">=</div></div>');
                 $debugInfo = $('#debugInfo');
-                $debugInfo.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
+                $debugInfo.append('<div id="debugInfoInner" style="overflow:scroll;height:100%;padding:0 10px"></div>');
+                var $debugInfoInner = $('#debugInfoInner');
+                $debugInfoInner.append('<div class="debuginfo-list"><pre>' + msg + '</pre></div>');
             }
-            if ($debugInfo.height() > 150) {
+            if ($debugInfoInner.height() > 150) {
                 $debugInfo.css('height', '150px')
             }
+
+            var $debugInfoTitle = $('#debugInfoTitle');
+            $debugInfoTitle.on('touchmove', function(e){//拖动
+                var clientY = e.targetTouches[0].clientY;
+                var clientH = $('body').height();
+                if(clientH-clientY>25 && clientY>10){
+                    $debugInfo.css({
+                        'top': clientY,
+                        'height': 'auto'
+                    })
+                }
+            })
         },
 
         /**
@@ -121,8 +136,9 @@
                 'Error object: ' + JSON.stringify(error)
             ].join('<br>');
         }
+        $('#debugInfo').html('');
         maple.debugInfo(errorMessage);
         $('#debugInfo').css('color', '#c7254e');
-        $('#debugInfo label').hide();
+        $('#debugInfo label.debuginfo-linenumber').hide();
     }
 })(window);
