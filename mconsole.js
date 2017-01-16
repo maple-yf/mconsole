@@ -67,7 +67,7 @@
                 lineNumber = getStackTrace().split(/\n+/)[3].replace(/(^\s+|\s+$)/, "");
                 lineNumber = lineNumber.replace(/(at )?http\:\/\/.*\//, "").replace(/\:\d+(\))?$/, ")");
             } else if (stack = new Error().stack) {
-                lineNumber = stack.split(/\n+/)[1].replace(/(^\s+|\s+$)/, "").replace(/(http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
+                lineNumber = stack.split(/\n+/)[2].replace(/(^\s+|\s+$)/, "").replace(/(http\:\/\/.*\/)/, "").replace(/\:\d+$/, "");
             }
             lineNumber = '<label class="debuginfo-linenumber" style="color:#000;">----' + lineNumber + '</label>';
             return lineNumber;
@@ -96,8 +96,8 @@
             var $debugInfoTitle = $('#debugInfoTitle');
             $debugInfoTitle.on('touchmove', function(e){//拖动
                 var clientY = e.targetTouches[0].clientY;
-                var clientH = $('body').height();
-                if(clientH-clientY>25 && clientY>10){
+                var clientH = document.documentElement.clientHeight;
+                if(clientH-clientY>35 && clientY>10){
                     $debugInfo.css({
                         'top': clientY,
                         'height': 'auto'
